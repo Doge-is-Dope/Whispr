@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "com.clementl.whispr"
-        minSdk = 30
+        minSdk = 27
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -46,7 +46,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -63,7 +62,6 @@ dependencies {
     implementation(libs.bundles.camerax)
     implementation(libs.mlkit.face.detection)
     implementation(libs.timber)
-
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
