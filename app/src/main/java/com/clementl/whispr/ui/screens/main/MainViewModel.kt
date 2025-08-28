@@ -28,6 +28,7 @@ class MainViewModel @Inject constructor(
             when (faceState) {
                 is FaceDetectionState.NoFace -> UiState.Standby
                 is FaceDetectionState.FacesDetected -> UiState.FacesDetected(faceState.count)
+                is FaceDetectionState.Error -> UiState.Error(faceState.message)
             }
         }
         .stateIn(
@@ -45,4 +46,5 @@ class MainViewModel @Inject constructor(
 sealed class UiState {
     data object Standby : UiState()
     data class FacesDetected(val count: Int) : UiState()
+    data class Error(val message: String) : UiState()
 }

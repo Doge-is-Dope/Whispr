@@ -6,6 +6,11 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -22,9 +27,9 @@ import com.clementl.whispr.ui.screens.main.components.PermissionRequestScreen
 
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
-
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
 
     var hasCameraPermission by remember {
         mutableStateOf(
@@ -47,21 +52,32 @@ fun MainScreen(viewModel: MainViewModel) {
         }
     }
 
+    LaunchedEffect(uiState) {
+        if (uiState is UiState.Error) {
+            snackbarHostState.showSnackbar((uiState as UiState.Error).message)
+        }
+    }
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        if (hasCameraPermission) {
-            CameraView(
-                analyzer = viewModel.getImageAnalyzer(),
-                executor = viewModel.getAnalysisExecutor(),
-                uiState = uiState
-            )
-        } else {
-            PermissionRequestScreen(
-                onRequestPermission = { launcher.launch(Manifest.permission.CAMERA) },
-            )
+    MaterialTheme {
+        Scaffold(
+            snackbarHost = { SnackbarHost(snackbarHostState) }
+        ) { paddingValues ->
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                if (hasCameraPermission) {
+                    CameraView(
+                        analyzer = viewModel.getImageAnalyzer(),
+                        executor = viewModel.getAnalysisExecutor(),
+                        uiState = uiState,
+                    )
+                } else {
+                    PermissionRequestScreen(
+                        onRequestPermission = { launcher.launch(Manifest.permission.CAMERA) },
+                    )
+                }
+            }
         }
     }
 }

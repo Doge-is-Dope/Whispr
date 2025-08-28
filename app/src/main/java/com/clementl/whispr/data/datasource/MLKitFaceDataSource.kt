@@ -46,6 +46,7 @@ class MLKitFaceDataSource @Inject constructor(
                     .addOnSuccessListener(onResults)
                     .addOnFailureListener { e ->
                         Timber.e(e, "Face detection failed")
+                        _faceDetectionState.value = FaceDetectionState.Error("Face detection failed")
                     }
                     .addOnCompleteListener {
                         imageProxy.close()

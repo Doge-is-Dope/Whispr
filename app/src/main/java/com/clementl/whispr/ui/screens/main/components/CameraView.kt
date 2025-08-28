@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.clementl.whispr.R
@@ -23,7 +24,13 @@ fun CameraView(analyzer: ImageAnalysis.Analyzer, uiState: UiState, executor: Exe
         Text(
             text = when (uiState) {
                 is UiState.Standby -> stringResource(R.string.status_standby)
-                is UiState.FacesDetected -> stringResource(R.string.status_faces_detected, uiState.count)
+                is UiState.FacesDetected -> pluralStringResource(
+                    R.plurals.status_faces_detected,
+                    uiState.count,
+                    uiState.count
+                )
+
+                is UiState.Error -> stringResource(R.string.status_error, uiState.message)
             },
             modifier = Modifier
                 .align(Alignment.TopCenter)

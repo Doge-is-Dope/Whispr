@@ -3,6 +3,10 @@
     <string name="permission_camera_title">Camera Permission Needed</string>
     <string name="permission_camera_desc">Allow access to your camera to continue using this feature.</string>
     <string name="permission_camera_action">Allow Camera Access</string>
-    <string name="status_standby">Status: Standby...</string>
-    <string name="status_faces_detected">Status: Detected %1$d faces!</string>
+    <string name="status_standby">Standby…</string>
+    <plurals name="status_faces_detected">
+        <item quantity="one">Detected %d face</item>
+        <item quantity="other">Detected %d faces</item>
+    </plurals>
+    <string name="status_error">Error: %1$s</string>
 </resources>
