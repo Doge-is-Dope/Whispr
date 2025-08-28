@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Whispr</string>
-    <string name="premission_camera_title">Camera Permission Needed</string>
+    <string name="permission_camera_title">Camera Permission Needed</string>
     <string name="permission_camera_desc">Allow access to your camera to continue using this feature.</string>
     <string name="permission_camera_action">Allow Camera Access</string>
+    <string name="status_standby">Status: Standby...</string>
+    <string name="status_faces_detected">Status: Detected %1$d faces!</string>
 </resources>

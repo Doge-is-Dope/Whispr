@@ -17,20 +17,15 @@ object ProviderModule {
     @Provides
     @Singleton
     fun provideFaceDetectorOptions(): FaceDetectorOptions = FaceDetectorOptions.Builder()
-        .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
+        .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
         .build()
 
     @Provides
     @Singleton
-    fun provideFaceDetector(options: FaceDetectorOptions): FaceDetector {
-        return FaceDetection.getClient(options)
-    }
-
+    fun provideFaceDetector(options: FaceDetectorOptions): FaceDetector = FaceDetection.getClient(options)
 
     @Provides
     @Singleton
     @AnalysisExecutor
-    fun provideAnalysisExecutor(): Executor {
-        return Executors.newSingleThreadExecutor()
-    }
+    fun provideAnalysisExecutor(): Executor = Executors.newSingleThreadExecutor()
 }

@@ -38,7 +38,7 @@ fun PermissionRequestScreen(onRequestPermission: () -> Unit) {
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = stringResource(R.string.premission_camera_title),
+            text = stringResource(R.string.permission_camera_title),
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center
         )

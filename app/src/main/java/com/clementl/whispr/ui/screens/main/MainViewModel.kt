@@ -3,6 +3,7 @@ package com.clementl.whispr.ui.screens.main
 import androidx.camera.core.ImageAnalysis
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.clementl.whispr.di.AnalysisExecutor
 import com.clementl.whispr.domain.model.FaceDetectionState
 import com.clementl.whispr.domain.usecase.GetImageAnalyzerUseCase
 import com.clementl.whispr.domain.usecase.ObserveFaceStateUseCase
@@ -12,18 +13,21 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import timber.log.Timber
+import java.util.concurrent.Executor
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     observeFaceStateUseCase: ObserveFaceStateUseCase,
-    private val getImageAnalyzerUseCase: GetImageAnalyzerUseCase
+    private val getImageAnalyzerUseCase: GetImageAnalyzerUseCase,
+    @param:AnalysisExecutor private val analysisExecutor: Executor
 ) : ViewModel() {
 
     val uiState: StateFlow<UiState> = observeFaceStateUseCase()
         .map { faceState ->
             when (faceState) {
                 is FaceDetectionState.NoFace -> UiState.Standby
-                is FaceDetectionState.FaceDetected -> UiState.FaceDetected(faceState.count)
+                is FaceDetectionState.FacesDetected -> UiState.FacesDetected(faceState.count)
             }
         }
         .stateIn(
@@ -32,13 +36,13 @@ class MainViewModel @Inject constructor(
             initialValue = UiState.Standby
         )
 
-    fun getImageAnalyzer(): ImageAnalysis.Analyzer {
-        return getImageAnalyzerUseCase()
-    }
+    fun getImageAnalyzer(): ImageAnalysis.Analyzer = getImageAnalyzerUseCase()
+
+    fun getAnalysisExecutor(): Executor = analysisExecutor
 }
 
 
 sealed class UiState {
     data object Standby : UiState()
-    data class FaceDetected(val count: Int) : UiState()
+    data class FacesDetected(val count: Int) : UiState()
 }

@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.clementl.whispr.ui.screens.main.components.CameraView
 import com.clementl.whispr.ui.screens.main.components.PermissionRequestScreen
 
 @Composable
@@ -52,7 +53,11 @@ fun MainScreen(viewModel: MainViewModel) {
         contentAlignment = Alignment.Center
     ) {
         if (hasCameraPermission) {
-            // TODO: Show Camera Preview
+            CameraView(
+                analyzer = viewModel.getImageAnalyzer(),
+                executor = viewModel.getAnalysisExecutor(),
+                uiState = uiState
+            )
         } else {
             PermissionRequestScreen(
                 onRequestPermission = { launcher.launch(Manifest.permission.CAMERA) },

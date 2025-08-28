@@ -10,7 +10,7 @@ sealed class FaceDetectionState {
      * Face(s) detected, with the count of faces
      * @param count Number of faces detected
      */
-    data class FaceDetected(val count: Int) : FaceDetectionState() {
+    data class FacesDetected(val count: Int) : FaceDetectionState() {
         init {
             require(count > 0) {
                 "FacesDetected's count cannot be zero or negative. Use NoFace state instead."

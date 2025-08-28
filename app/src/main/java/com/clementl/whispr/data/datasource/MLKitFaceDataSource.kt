@@ -1,36 +1,30 @@
 package com.clementl.whispr.data.datasource
 
-
+import androidx.annotation.OptIn
+import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
-import androidx.camera.mlkit.vision.MlKitAnalyzer
-import com.clementl.whispr.di.AnalysisExecutor
+import androidx.camera.core.ImageProxy
 import com.clementl.whispr.domain.model.FaceDetectionState
 import com.clementl.whispr.domain.model.FaceDetectionState.NoFace
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.face.FaceDetector
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import java.util.concurrent.Executor
+import timber.log.Timber
 
 @Singleton
 class MLKitFaceDataSource @Inject constructor(
-    private val detector: FaceDetector,
-    @param:AnalysisExecutor private val executor: Executor
+    private val detector: FaceDetector
 ) : FaceDataSource {
     private val _faceDetectionState = MutableStateFlow<FaceDetectionState>(NoFace)
 
-    private val mlKitAnalyzer = MlKitAnalyzer(
-        listOf(detector),
-        ImageAnalysis.COORDINATE_SYSTEM_VIEW_REFERENCED,
-        executor
-    ) { result: MlKitAnalyzer.Result ->
-
-        val faces = result.getValue(detector)
-
-        val newState = if (faces.isNullOrEmpty()) NoFace
-        else FaceDetectionState.FaceDetected(faces.size)
+    private val mlKitAnalyzer = ManualFaceAnalyzer { faces ->
+        val newState = if (faces.isEmpty()) NoFace
+        else FaceDetectionState.FacesDetected(faces.size)
         _faceDetectionState.value = newState
     }
 
@@ -38,4 +32,25 @@ class MLKitFaceDataSource @Inject constructor(
         _faceDetectionState.asStateFlow()
 
     override fun getImageAnalyzer(): ImageAnalysis.Analyzer = mlKitAnalyzer
+
+    private inner class ManualFaceAnalyzer(private val onResults: (List<Face>) -> Unit) :
+        ImageAnalysis.Analyzer {
+
+        @OptIn(ExperimentalGetImage::class)
+        override fun analyze(imageProxy: ImageProxy) {
+            imageProxy.image?.let { mediaImage ->
+                val image =
+                    InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+
+                detector.process(image)
+                    .addOnSuccessListener(onResults)
+                    .addOnFailureListener { e ->
+                        Timber.e(e, "Face detection failed")
+                    }
+                    .addOnCompleteListener {
+                        imageProxy.close()
+                    }
+            } ?: imageProxy.close()
+        }
+    }
 }
