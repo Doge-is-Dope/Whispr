@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Whispr</string>
+    <string name="permission_camera_title">需要相機權限</string>
+    <string name="permission_camera_desc">請允許存取相機以繼續</string>
+    <string name="permission_camera_action">授予相機存取權限</string>
+    <string name="status_standby">待命中…</string>
+    <plurals name="status_faces_detected">
+        <item quantity="other">偵測到 %1$d 張臉</item>
+    </plurals>
+    <string name="status_error">錯誤：%1$s</string>
+    <string name="camera_instruction">請將臉對準畫面框線</string>
+</resources>

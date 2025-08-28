@@ -4,9 +4,10 @@
     <string name="permission_camera_desc">Allow access to your camera to continue using this feature.</string>
     <string name="permission_camera_action">Allow Camera Access</string>
     <string name="status_standby">Standby…</string>
-    <plurals name="status_faces_detected">
-        <item quantity="one">Detected %d face</item>
-        <item quantity="other">Detected %d faces</item>
-    </plurals>
-    <string name="status_error">Error: %1$s</string>
+         <plurals name="status_faces_detected">
+         <item quantity="one">Detected 1 face</item>
+         <item quantity="other">Detected %d faces</item>
+     </plurals>
+     <string name="status_error">Error: %1$s</string>
+     <string name="camera_instruction">Align your face within the frame</string>
 </resources>
