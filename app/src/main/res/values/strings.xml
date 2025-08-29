@@ -1,8 +1,11 @@
 <resources>
     <string name="app_name">Whispr</string>
-    <string name="permission_camera_title">Camera Permission Needed</string>
-    <string name="permission_camera_desc">Allow access to your camera to continue using this feature.</string>
-    <string name="permission_camera_action">Allow Camera Access</string>
+    <string name="permission_request_title">Camera and Microphone Permissions Needed</string>
+    <string name="permission_request_desc">Allow access to your camera and microphone to continue using this feature.</string>
+    <string name="permission_request_action">Allow Access</string>
+    <string name="permission_settings_title">Permissions Disabled</string>
+    <string name="permission_settings_desc">Enable camera and microphone permissions in Settings to continue.</string>
+    <string name="permission_settings_action">Open Settings</string>
     <string name="status_standby">Standby…</string>
          <plurals name="status_faces_detected">
          <item quantity="one">Detected 1 face</item>

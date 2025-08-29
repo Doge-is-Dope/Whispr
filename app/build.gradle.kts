@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
+    implementation(libs.accompanist.permissions)
     implementation(libs.bundles.camerax)
     implementation(libs.mlkit.face.detection)
     implementation(libs.timber)
