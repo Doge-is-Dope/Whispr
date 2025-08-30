@@ -8,7 +8,7 @@ interface FaceRepository {
     /**
      * Provides a real-time stream of the current face detection state.
      */
-    fun getFaceDetectionFlow(): Flow<FaceDetectionState>
+    fun getFaceDetectionStateFlow(): Flow<FaceDetectionState>
 
     /**
      * Provides an ImageAnalysis.Analyzer instance for CameraX to use.

@@ -6,11 +6,12 @@
     <string name="permission_settings_title">Permissions Disabled</string>
     <string name="permission_settings_desc">Enable camera and microphone permissions in Settings to continue.</string>
     <string name="permission_settings_action">Open Settings</string>
+    <string name="camera_instruction">Align your face within the frame</string>
     <string name="status_standby">Standby…</string>
          <plurals name="status_faces_detected">
          <item quantity="one">Detected 1 face</item>
          <item quantity="other">Detected %d faces</item>
      </plurals>
+    <string name="status_listening">Listening…</string>
      <string name="status_error">Error: %1$s</string>
-     <string name="camera_instruction">Align your face within the frame</string>
 </resources>

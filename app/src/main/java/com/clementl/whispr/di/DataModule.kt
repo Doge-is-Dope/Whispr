@@ -1,8 +1,12 @@
 package com.clementl.whispr.di
 
+import com.clementl.whispr.data.datasource.AudioDataSource
+import com.clementl.whispr.data.datasource.AudioRecorderDataSource
 import com.clementl.whispr.data.datasource.FaceDataSource
 import com.clementl.whispr.data.datasource.MLKitFaceDataSource
+import com.clementl.whispr.data.repository.AudioRepositoryImpl
 import com.clementl.whispr.data.repository.FaceRepositoryImpl
+import com.clementl.whispr.domain.repository.AudioRepository
 import com.clementl.whispr.domain.repository.FaceRepository
 import dagger.Binds
 import dagger.Module
@@ -15,11 +19,19 @@ import jakarta.inject.Singleton
 abstract class DataModule {
     @Binds
     @Singleton
-    abstract fun bindFaceDataSource(mlKitFaceDataSource: MLKitFaceDataSource): FaceDataSource
+    abstract fun bindFaceDataSource(dataSource: MLKitFaceDataSource): FaceDataSource
 
     @Binds
     @Singleton
     abstract fun bindFaceRepository(impl: FaceRepositoryImpl): FaceRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAudioDataSource(dataSource: AudioRecorderDataSource): AudioDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindAudioRepository(impl: AudioRepositoryImpl): AudioRepository
 }
 
 

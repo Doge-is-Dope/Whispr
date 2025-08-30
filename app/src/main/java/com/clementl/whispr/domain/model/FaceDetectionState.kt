@@ -20,7 +20,7 @@ sealed class FaceDetectionState {
 
     /**
      * An error occurred during face detection
-     * @param message The error message
+     * @param exception The exception that occurred
      */
-    data class Error(val message: String) : FaceDetectionState()
+    data class Error(val exception: Throwable) : FaceDetectionState()
 }

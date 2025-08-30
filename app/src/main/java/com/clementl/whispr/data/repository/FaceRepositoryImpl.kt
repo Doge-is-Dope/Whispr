@@ -11,11 +11,7 @@ class FaceRepositoryImpl @Inject constructor(
     private val faceDataSource: FaceDataSource
 ) : FaceRepository {
 
-    override fun getFaceDetectionFlow(): Flow<FaceDetectionState> {
-        return faceDataSource.getFaceDetectionFlow()
-    }
+    override fun getFaceDetectionStateFlow(): Flow<FaceDetectionState> = faceDataSource.getFaceDetectionStateFlow()
 
-    override fun getImageAnalyzer(): ImageAnalysis.Analyzer {
-        return faceDataSource.getImageAnalyzer()
-    }
+    override fun getImageAnalyzer(): ImageAnalysis.Analyzer = faceDataSource.getImageAnalyzer()
 }

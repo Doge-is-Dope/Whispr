@@ -71,7 +71,7 @@ fun CameraView(analyzer: ImageAnalysis.Analyzer, uiState: UiState, executor: Exe
             modifier = Modifier.fillMaxSize()
         )
 
-        // Center guide ring (responsive)
+        // Center guide ring
         GuideRing(
             modifier = Modifier.align(Alignment.Center)
         )
@@ -93,8 +93,8 @@ fun CameraView(analyzer: ImageAnalysis.Analyzer, uiState: UiState, executor: Exe
                 .align(Alignment.TopStart),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Crossfade(targetState = uiState, label = "statusCrossfade") { s ->
-                StatusChip(text = statusText(s))
+            Crossfade(targetState = uiState, label = "statusCrossfade") { state ->
+                StatusChip(text = statusText(state))
             }
         }
 
@@ -167,6 +167,7 @@ private fun statusText(uiState: UiState): String = when (uiState) {
     )
 
     is UiState.Error -> stringResource(R.string.status_error, uiState.message)
+    is UiState.Listening -> stringResource(R.string.status_listening)
 }
 
 

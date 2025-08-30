@@ -1,12 +1,24 @@
 package com.clementl.whispr.domain.usecase
 
+import androidx.camera.core.ImageAnalysis
 import com.clementl.whispr.domain.model.FaceDetectionState
 import com.clementl.whispr.domain.repository.FaceRepository
 import jakarta.inject.Inject
+import jakarta.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 
+@Singleton
+class GetImageAnalyzerUseCase @Inject constructor(
+    private val faceRepository: FaceRepository
+) {
+    operator fun invoke(): ImageAnalysis.Analyzer {
+        return faceRepository.getImageAnalyzer()
+    }
+}
+
+@Singleton
 class ObserveFaceStateUseCase @Inject constructor(private val faceRepository: FaceRepository) {
     operator fun invoke(): Flow<FaceDetectionState> {
-        return faceRepository.getFaceDetectionFlow()
+        return faceRepository.getFaceDetectionStateFlow()
     }
 }
