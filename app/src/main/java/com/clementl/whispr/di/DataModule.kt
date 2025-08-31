@@ -6,8 +6,10 @@ import com.clementl.whispr.data.datasource.FaceDataSource
 import com.clementl.whispr.data.datasource.MLKitFaceDataSource
 import com.clementl.whispr.data.repository.AudioRepositoryImpl
 import com.clementl.whispr.data.repository.FaceRepositoryImpl
+import com.clementl.whispr.data.repository.TranscriptionRepositoryImpl
 import com.clementl.whispr.domain.repository.AudioRepository
 import com.clementl.whispr.domain.repository.FaceRepository
+import com.clementl.whispr.domain.repository.TranscriptionRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -32,6 +34,10 @@ abstract class DataModule {
     @Binds
     @Singleton
     abstract fun bindAudioRepository(impl: AudioRepositoryImpl): AudioRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindTranscriptionRepository(impl: TranscriptionRepositoryImpl): TranscriptionRepository
 }
 
 

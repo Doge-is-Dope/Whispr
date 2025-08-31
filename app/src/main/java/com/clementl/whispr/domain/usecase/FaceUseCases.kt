@@ -8,17 +8,13 @@ import jakarta.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 
 @Singleton
-class GetImageAnalyzerUseCase @Inject constructor(
-    private val faceRepository: FaceRepository
-) {
-    operator fun invoke(): ImageAnalysis.Analyzer {
-        return faceRepository.getImageAnalyzer()
-    }
+class GetImageAnalyzerUseCase @Inject constructor(private val repository: FaceRepository) {
+    operator fun invoke(): ImageAnalysis.Analyzer = repository.getImageAnalyzer()
 }
 
 @Singleton
-class ObserveFaceStateUseCase @Inject constructor(private val faceRepository: FaceRepository) {
+class ObserveFaceStateUseCase @Inject constructor(private val repository: FaceRepository) {
     operator fun invoke(): Flow<FaceDetectionState> {
-        return faceRepository.getFaceDetectionStateFlow()
+        return repository.getFaceDetectionStateFlow()
     }
 }

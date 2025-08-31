@@ -67,7 +67,6 @@ class AudioRecorderDataSource @Inject constructor() : AudioDataSource {
             while (isActive) {
                 val readSize = audioRecord?.read(audioBuffer, 0, audioBuffer.size) ?: -1
                 if (readSize > 0) {
-                    // [VAD integration point]
                     // TODO: Pass this audioBuffer raw audio data to the Silero VAD model
                     Timber.d("Audio chunk read, size: $readSize")
                 }

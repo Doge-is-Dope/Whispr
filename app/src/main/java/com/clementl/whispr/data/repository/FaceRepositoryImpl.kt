@@ -5,8 +5,10 @@ import com.clementl.whispr.data.datasource.FaceDataSource
 import com.clementl.whispr.domain.model.FaceDetectionState
 import com.clementl.whispr.domain.repository.FaceRepository
 import jakarta.inject.Inject
+import jakarta.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 
+@Singleton
 class FaceRepositoryImpl @Inject constructor(
     private val faceDataSource: FaceDataSource
 ) : FaceRepository {
