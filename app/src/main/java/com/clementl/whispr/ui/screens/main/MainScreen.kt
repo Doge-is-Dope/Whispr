@@ -1,6 +1,7 @@
 package com.clementl.whispr.ui.screens.main
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -20,7 +21,10 @@ import com.clementl.whispr.ui.screens.main.components.RequestPermissions
 import com.clementl.whispr.utils.mainPermissions
 
 @Composable
-fun MainScreen(viewModel: MainViewModel) {
+fun MainScreen(
+    viewModel: MainViewModel,
+    contentPadding: PaddingValues = PaddingValues()
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -30,33 +34,30 @@ fun MainScreen(viewModel: MainViewModel) {
             else -> Unit
         }
     }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(contentPadding)
+    ) {
+        RequestPermissions(permissions = mainPermissions) {
+            CameraView(
+                analyzer = viewModel.getImageAnalyzer(),
+                executor = viewModel.getAnalysisExecutor(),
+                uiState = uiState,
+            )
+        }
 
-    Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            RequestPermissions(permissions = mainPermissions) {
-                CameraView(
-                    analyzer = viewModel.getImageAnalyzer(),
-                    executor = viewModel.getAnalysisExecutor(),
-                    uiState = uiState,
-                )
-            }
-
-            if (uiState !is UiState.Standby && uiState !is UiState.Error) {
-                RecordingButton(
-                    uiState is UiState.Listening,
-                    onClick = {
-                        if (uiState is UiState.Listening) viewModel.stopListening()
-                        else if (uiState is UiState.FacesDetected) viewModel.startListening()
-                    },
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 32.dp)
-                )
-            }
+        if (uiState !is UiState.Standby && uiState !is UiState.Error) {
+            RecordingButton(
+                uiState is UiState.Listening,
+                onClick = {
+                    if (uiState is UiState.Listening) viewModel.stopListening()
+                    else if (uiState is UiState.FacesDetected) viewModel.startListening()
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 32.dp)
+            )
         }
     }
 }

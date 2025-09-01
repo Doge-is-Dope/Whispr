@@ -24,7 +24,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             WhisprTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainScreen(viewModel = viewModel)
+                    MainScreen(
+                        viewModel = viewModel,
+                        contentPadding = innerPadding
+                    )
                 }
             }
         }

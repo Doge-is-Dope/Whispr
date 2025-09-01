@@ -88,8 +88,7 @@ fun CameraView(analyzer: ImageAnalysis.Analyzer, uiState: UiState, executor: Exe
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .statusBarsPadding()
-                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .padding(horizontal = 16.dp, vertical = 16.dp)
                 .align(Alignment.TopStart),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -105,7 +104,6 @@ fun CameraView(analyzer: ImageAnalysis.Analyzer, uiState: UiState, executor: Exe
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .navigationBarsPadding()
                     .padding(horizontal = 16.dp, vertical = 24.dp)
             ) {
                 Text(
