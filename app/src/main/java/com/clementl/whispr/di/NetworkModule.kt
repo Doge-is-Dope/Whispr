@@ -1,5 +1,6 @@
 package com.clementl.whispr.di
 
+import com.clementl.whispr.BuildConfig
 import com.clementl.whispr.data.datasource.remote.api.AuthInterceptor
 import com.clementl.whispr.data.datasource.remote.api.OpenAiService
 import dagger.Module
@@ -17,7 +18,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private const val OPENAI_API_KEY = "" // TODO: For testing
+
+    // TODO: This is only for development purposes.
+    private const val OPENAI_API_KEY = BuildConfig.OPENAI_API_KEY
     private const val BASE_URL = "https://api.openai.com/"
 
     @Provides
@@ -28,10 +31,11 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         return OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)
             .addInterceptor(loggingInterceptor)
             .build()
     }

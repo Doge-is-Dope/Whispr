@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -24,6 +25,15 @@ android {
     }
 
     buildTypes {
+        debug {
+            val localProperties = Properties()
+            val localPropertiesFile = rootProject.file("local.properties")
+            if (localPropertiesFile.exists()) {
+                localProperties.load(localPropertiesFile.inputStream())
+            }
+            val apiKey = localProperties.getProperty("OPENAI_API_KEY") ?: ""
+            buildConfigField("String", "OPENAI_API_KEY", "\"$apiKey\"")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
