@@ -20,13 +20,13 @@ import javax.inject.Singleton
 object NetworkModule {
 
     // TODO: This is only for development purposes.
-    private const val OPENAI_API_KEY = BuildConfig.OPENAI_API_KEY
+    private val apiKey = BuildConfig.OPENAI_API_KEY
     private const val BASE_URL = "https://api.openai.com/"
 
     @Provides
     @Singleton
     fun provideAuthInterceptor(): AuthInterceptor {
-        return AuthInterceptor(OPENAI_API_KEY)
+        return AuthInterceptor(apiKey)
     }
 
     @Provides
