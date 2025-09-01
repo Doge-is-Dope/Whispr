@@ -26,16 +26,10 @@ android {
 
     buildTypes {
         debug {
-            val envApiKey = System.getenv("OPENAI_API_KEY")
-            val localProperties = Properties()
-            val localPropertiesFile = rootProject.file("local.properties")
-            if (envApiKey == null && localPropertiesFile.exists()) {
-                localProperties.load(localPropertiesFile.inputStream())
-            }
-            val apiKey = envApiKey ?: localProperties.getProperty("OPENAI_API_KEY") ?: ""
-            buildConfigField("String", "OPENAI_API_KEY", "\"$apiKey\"")
+            buildConfigField("String", "OPENAI_API_KEY", "\"${getOpenAiKey()}\"")
         }
         release {
+            buildConfigField("String", "OPENAI_API_KEY", "\"${getOpenAiKey()}\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -56,6 +50,13 @@ android {
         buildConfig = true
         compose = true
     }
+}
+
+fun getOpenAiKey(): String {
+    return System.getenv("OPENAI_API_KEY")
+        ?: rootProject.file("local.properties").takeIf { it.exists() }?.inputStream()?.use {
+            Properties().apply { load(it) }.getProperty("OPENAI_API_KEY")
+        } ?: ""
 }
 
 dependencies {
