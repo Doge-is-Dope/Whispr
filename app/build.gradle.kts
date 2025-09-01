@@ -26,12 +26,13 @@ android {
 
     buildTypes {
         debug {
+            val envApiKey = System.getenv("OPENAI_API_KEY")
             val localProperties = Properties()
             val localPropertiesFile = rootProject.file("local.properties")
-            if (localPropertiesFile.exists()) {
+            if (envApiKey == null && localPropertiesFile.exists()) {
                 localProperties.load(localPropertiesFile.inputStream())
             }
-            val apiKey = localProperties.getProperty("OPENAI_API_KEY") ?: ""
+            val apiKey = envApiKey ?: localProperties.getProperty("OPENAI_API_KEY") ?: ""
             buildConfigField("String", "OPENAI_API_KEY", "\"$apiKey\"")
         }
         release {
