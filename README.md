@@ -2,7 +2,7 @@
 
 Whispr is an intelligent Android app that detects faces to automatically initiate voice interaction. It records speech, transcribes it via OpenAI’s Transcription API, and generates AI-powered responses. The app showcases how to combine CameraX, ML Kit, audio processing, and conversational AI in a modern Android architecture.
 
-> ⚠️This app is provided as a demo and is not intended for production use.
+> ⚠️ This app is provided as a demo and is not intended for production use.
 
 ## 🚀 Getting Started
 
@@ -19,6 +19,7 @@ To get a local copy up and running, follow these simple steps.
 1.  Clone the repo
 2.  Open the project in Android Studio.
 3.  Create a `local.properties` file in the root of the project and add your OpenAI API key:
+
     ```
     OPENAI_API_KEY=sk-...
     ```
