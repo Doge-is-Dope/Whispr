@@ -32,6 +32,8 @@ jobs:
         uses: android-actions/setup-android@v3
           
       - name: Build, run unit tests, and run Lint
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: ./gradlew --no-daemon build lint -x connectedAndroidTest
 
       - name: Upload Lint report
