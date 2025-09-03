@@ -63,7 +63,7 @@ okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhtt
 okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinSerialization" }
 # VAD
-vad-webrtc = { group = "com.github.gkonovalov", name = "vad-webrtc", version.ref = "vad-webrtc" }
+vad-webrtc = { group = "com.github.gkonovalov.android-vad", name = "webrtc", version.ref = "vad-webrtc" }
 
 # Testing
 junit = { group = "junit", name = "junit", version.ref = "junit" }
