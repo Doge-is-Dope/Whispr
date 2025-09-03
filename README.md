@@ -68,3 +68,31 @@ app/src/main/java/com/clementl/whispr/
 
 - [ ] **Interrupt Mechanism**  
   Allows users to interrupt AI speech mid-sentence. TTS stops immediately and switches back to listening mode while preserving context.
+
+## ✨ Interaction Flow
+
+The primary states are:
+
+1.  Idle: The initial state. The microphone is off.
+2.  Recording: A brief, transitional state when the microphone is activated.
+3.  Silence: The microphone is on and actively listening, but no speech is detected.
+4.  Speech: The microphone is on, and the VAD has detected speech.
+5.  Transcribing: The recorded speech is being converted to text (STT).
+6.  Thinking: The transcribed text is sent to the AI to generate a response.
+7.  Responding: The AI's response is converted to audio and played back (TTS).
+
+State Transition Diagram
+
+```
+Idle
+ ↓
+Recording
+ ↓
+Silence ←→ Speech
+ ↓
+Transcribing
+ ↓
+Thinking
+ ↓
+Responding
+```
