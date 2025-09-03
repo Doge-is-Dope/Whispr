@@ -39,8 +39,10 @@ class MainViewModel @Inject constructor(
                 is FaceDetectionState.Error -> UiState.Error("Face detection error: ${faceState.exception.message}")
                 is FaceDetectionState.FacesDetected -> {
                     when (recordingState) {
-                        is RecordingState.Recording -> UiState.Listening
                         is RecordingState.Idle -> UiState.FacesDetected(faceState.count)
+                        is RecordingState.Recording -> UiState.Listening(isSpeaking = false)
+                        is RecordingState.Speech -> UiState.Listening(isSpeaking = true)
+                        is RecordingState.Silence -> UiState.Listening(isSpeaking = false)
                     }
                 }
             }
@@ -74,6 +76,6 @@ class MainViewModel @Inject constructor(
 sealed class UiState {
     data object Standby : UiState()
     data class FacesDetected(val count: Int) : UiState()
-    data object Listening : UiState()
+    data class Listening(val isSpeaking: Boolean) : UiState()
     data class Error(val message: String) : UiState()
 }

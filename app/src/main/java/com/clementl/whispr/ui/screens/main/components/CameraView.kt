@@ -160,9 +160,9 @@ private fun statusText(uiState: UiState): String = when (uiState) {
         uiState.count,
         uiState.count
     )
-
+    is UiState.Listening -> if (uiState.isSpeaking) stringResource(R.string.status_speaking)
+    else stringResource(R.string.status_listening)
     is UiState.Error -> stringResource(R.string.status_error, uiState.message)
-    is UiState.Listening -> stringResource(R.string.status_listening)
 }
 
 

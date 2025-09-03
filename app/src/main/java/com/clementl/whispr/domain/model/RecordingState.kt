@@ -10,4 +10,14 @@ sealed class RecordingState {
      * Currently recording
      */
     data object Recording : RecordingState()
+
+    /**
+     * Speech detected
+     */
+    data object Speech : RecordingState()
+
+    /**
+     * Silence detected
+     */
+    data object Silence : RecordingState()
 }
