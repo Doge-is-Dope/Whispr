@@ -16,6 +16,8 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executor
@@ -46,7 +48,9 @@ class MainViewModel @Inject constructor(
                     }
                 }
             }
-        }.stateIn(
+        }
+        .distinctUntilChanged()
+        .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = UiState.Standby
@@ -54,12 +58,12 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            faceStateFlow.collect { state ->
-                when (state) {
-                    is FaceDetectionState.FacesDetected -> startListeningUseCase()
-                    else -> stopListeningUseCase()
+            faceStateFlow
+                .map { it is FaceDetectionState.FacesDetected }
+                .distinctUntilChanged()
+                .collect { detected ->
+                    if (detected) startListeningUseCase() else stopListeningUseCase()
                 }
-            }
         }
     }
 
