@@ -11,9 +11,9 @@ import kotlinx.coroutines.flow.Flow
 class AudioRepositoryImpl @Inject constructor(
     private val audioDataSource: AudioDataSource
 ) : AudioRepository {
-    override suspend fun startListening() = audioDataSource.startListening()
+    override fun startListening() = audioDataSource.startListening()
 
-    override suspend fun stopListening() = audioDataSource.stopListening()
+    override fun stopListening() = audioDataSource.stopListening()
 
     override fun getRecordingStateFlow(): Flow<RecordingState> = audioDataSource.getRecordingStateFlow()
 }

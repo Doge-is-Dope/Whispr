@@ -11,6 +11,7 @@ import com.clementl.whispr.domain.usecase.ObserveFaceStateUseCase
 import com.clementl.whispr.domain.usecase.ObserveRecordingStateUseCase
 import com.clementl.whispr.domain.usecase.StartListeningUseCase
 import com.clementl.whispr.domain.usecase.StopListeningUseCase
+import com.clementl.whispr.ui.screens.main.UiState.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
@@ -37,24 +38,25 @@ class MainViewModel @Inject constructor(
     val uiState: StateFlow<UiState> =
         combine(faceStateFlow, recordingStateFlow) { faceState, recordingState ->
             when (faceState) {
-                is FaceDetectionState.NoFace -> UiState.Standby
-                is FaceDetectionState.Error -> UiState.Error("Face detection error: ${faceState.exception.message}")
+                is FaceDetectionState.NoFace -> Standby
+                is FaceDetectionState.Error -> Error("Face detection error: ${faceState.throwable.message}")
                 is FaceDetectionState.FacesDetected -> {
                     when (recordingState) {
-                        is RecordingState.Idle -> UiState.FacesDetected(faceState.count)
-                        is RecordingState.Recording -> UiState.Listening(isSpeaking = false)
-                        is RecordingState.Speech -> UiState.Listening(isSpeaking = true)
-                        is RecordingState.Silence -> UiState.Listening(isSpeaking = false)
+                        is RecordingState.Idle -> FacesDetected(faceState.count)
+                        is RecordingState.Recording -> Listening(isSpeaking = false)
+                        is RecordingState.Speech -> Listening(isSpeaking = true)
+                        is RecordingState.Silence -> Listening(isSpeaking = false)
+                        is RecordingState.Error -> Error("Recording error: ${recordingState.throwable.message}")
                     }
                 }
             }
         }
-        .distinctUntilChanged()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = UiState.Standby
-        )
+            .distinctUntilChanged()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = UiState.Standby
+            )
 
     init {
         viewModelScope.launch {
