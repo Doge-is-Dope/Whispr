@@ -73,9 +73,9 @@ class MainViewModel @Inject constructor(
 
     fun getAnalysisExecutor(): Executor = analysisExecutor
 
-    fun startListening() = viewModelScope.launch { startListeningUseCase() }
+    fun startListening() = startListeningUseCase()
 
-    fun stopListening() = viewModelScope.launch { stopListeningUseCase() }
+    fun stopListening() = stopListeningUseCase()
 }
 
 

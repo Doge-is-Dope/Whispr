@@ -85,7 +85,7 @@ class AudioRecorderDataSource @Inject constructor() : AudioDataSource {
         audioRecord?.startRecording()
         _recordingState.value = RecordingState.Recording
 
-        recordingJob = scope.launch {
+        recordingJob = scope.launch(Dispatchers.IO) {
             processAudioStream(this)
         }
     }
@@ -102,12 +102,8 @@ class AudioRecorderDataSource @Inject constructor() : AudioDataSource {
 
                 if (readSize > 0) {
                     val isSpeech = currentVad.isSpeech(frameBuffer)
-                    val newState = if (isSpeech) RecordingState.Speech else RecordingState.Silence
-
-                    if (_recordingState.value != newState) {
-                        _recordingState.value = newState
-                        Timber.tag(TAG).d("VAD state -> %s", newState)
-                    }
+                    _recordingState.value =
+                        if (isSpeech) RecordingState.Speech else RecordingState.Silence
                     // TODO: Process frameBuffer for transcription when in Speech
                 } else {
                     Timber.tag(TAG).w("AudioRecord read failed: $readSize")
@@ -156,7 +152,7 @@ class AudioRecorderDataSource @Inject constructor() : AudioDataSource {
         private const val SAMPLE_RATE = 16_000
         private const val CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_MONO
         private const val AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT
-        private const val SILENCE_DURATION_MS = 1_000
-        private const val SPEECH_DURATION_MS = 500
+        private const val SILENCE_DURATION_MS = 300
+        private const val SPEECH_DURATION_MS = 50
     }
 }
