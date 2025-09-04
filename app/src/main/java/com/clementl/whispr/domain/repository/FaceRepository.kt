@@ -14,4 +14,9 @@ interface FaceRepository {
      * Provides an ImageAnalysis.Analyzer instance for CameraX to use.
      */
     fun getImageAnalyzer(): ImageAnalysis.Analyzer
+
+    /**
+     * Releases underlying face detection resources.
+     */
+    fun release()
 }
