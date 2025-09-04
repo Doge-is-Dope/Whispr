@@ -8,15 +8,20 @@ import kotlinx.coroutines.flow.Flow
 
 @Singleton
 class StartListeningUseCase @Inject constructor(private val repository: AudioRepository) {
-    suspend operator fun invoke() = repository.startListening()
+    operator fun invoke() = repository.startListening()
 }
 
 @Singleton
 class StopListeningUseCase @Inject constructor(private val repository: AudioRepository) {
-    suspend operator fun invoke() = repository.stopListening()
+    operator fun invoke() = repository.stopListening()
 }
 
 @Singleton
 class ObserveRecordingStateUseCase @Inject constructor(private val repository: AudioRepository) {
     operator fun invoke(): Flow<RecordingState> = repository.getRecordingStateFlow()
+}
+
+@Singleton
+class ReleaseAudioResourcesUseCase @Inject constructor(private val repository: AudioRepository) {
+    operator fun invoke() = repository.release()
 }

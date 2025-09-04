@@ -7,15 +7,20 @@ interface AudioRepository {
     /**
      * Starts listening to audio input
      */
-    suspend fun startListening()
+    fun startListening()
 
     /**
      * Stops listening to audio input
      */
-    suspend fun stopListening()
+    fun stopListening()
 
     /**
      * Provides a real-time stream of the current recording state.
      */
     fun getRecordingStateFlow(): Flow<RecordingState>
+
+    /**
+     * Releases underlying audio resources.
+     */
+    fun release()
 }

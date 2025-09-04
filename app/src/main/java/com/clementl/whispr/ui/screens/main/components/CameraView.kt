@@ -10,10 +10,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -61,7 +59,6 @@ fun CameraView(analyzer: ImageAnalysis.Analyzer, uiState: UiState, executor: Exe
         }
         hadFace = hasFace
     }
-
 
     Box(modifier = Modifier.fillMaxSize()) {
         // Camera feed
@@ -163,9 +160,9 @@ private fun statusText(uiState: UiState): String = when (uiState) {
         uiState.count,
         uiState.count
     )
-
+    is UiState.Listening -> if (uiState.isSpeaking) stringResource(R.string.status_speaking)
+    else stringResource(R.string.status_listening)
     is UiState.Error -> stringResource(R.string.status_error, uiState.message)
-    is UiState.Listening -> stringResource(R.string.status_listening)
 }
 
 
