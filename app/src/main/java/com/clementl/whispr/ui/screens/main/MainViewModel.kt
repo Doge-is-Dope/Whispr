@@ -11,8 +11,8 @@ import com.clementl.whispr.domain.usecase.ObserveFaceStateUseCase
 import com.clementl.whispr.domain.usecase.ObserveRecordingStateUseCase
 import com.clementl.whispr.domain.usecase.StartListeningUseCase
 import com.clementl.whispr.domain.usecase.StopListeningUseCase
-import com.clementl.whispr.domain.usecase.ReleaseAudioResourcesUseCase
 import com.clementl.whispr.domain.usecase.ReleaseFaceResourcesUseCase
+import com.clementl.whispr.domain.usecase.ReleaseAudioResourcesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
@@ -31,6 +31,7 @@ class MainViewModel @Inject constructor(
     private val releaseFaceResourcesUseCase: ReleaseFaceResourcesUseCase,
     private val startListeningUseCase: StartListeningUseCase,
     private val stopListeningUseCase: StopListeningUseCase,
+    private val releaseAudioResourcesUseCase: ReleaseAudioResourcesUseCase,
 ) : ViewModel() {
 
     private val faceStateFlow = observeFaceStateUseCase()
@@ -74,6 +75,7 @@ class MainViewModel @Inject constructor(
 
     override fun onCleared() {
         releaseFaceResourcesUseCase()
+        releaseAudioResourcesUseCase()
         super.onCleared()
     }
 }

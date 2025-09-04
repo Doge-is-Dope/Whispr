@@ -16,4 +16,6 @@ class AudioRepositoryImpl @Inject constructor(
     override suspend fun stopListening() = audioDataSource.stopListening()
 
     override fun getRecordingStateFlow(): Flow<RecordingState> = audioDataSource.getRecordingStateFlow()
+
+    override fun release() = audioDataSource.release()
 }
