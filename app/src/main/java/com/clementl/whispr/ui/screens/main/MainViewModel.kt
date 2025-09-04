@@ -11,6 +11,8 @@ import com.clementl.whispr.domain.usecase.ObserveFaceStateUseCase
 import com.clementl.whispr.domain.usecase.ObserveRecordingStateUseCase
 import com.clementl.whispr.domain.usecase.StartListeningUseCase
 import com.clementl.whispr.domain.usecase.StopListeningUseCase
+import com.clementl.whispr.domain.usecase.ReleaseAudioResourcesUseCase
+import com.clementl.whispr.domain.usecase.ReleaseFaceResourcesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,10 +26,11 @@ import java.util.concurrent.Executor
 class MainViewModel @Inject constructor(
     observeFaceStateUseCase: ObserveFaceStateUseCase,
     observeRecordingStateUseCase: ObserveRecordingStateUseCase,
-    private val getImageAnalyzerUseCase: GetImageAnalyzerUseCase,
     @param:AnalysisExecutor private val analysisExecutor: Executor,
+    private val getImageAnalyzerUseCase: GetImageAnalyzerUseCase,
+    private val releaseFaceResourcesUseCase: ReleaseFaceResourcesUseCase,
     private val startListeningUseCase: StartListeningUseCase,
-    private val stopListeningUseCase: StopListeningUseCase
+    private val stopListeningUseCase: StopListeningUseCase,
 ) : ViewModel() {
 
     private val faceStateFlow = observeFaceStateUseCase()
@@ -68,6 +71,11 @@ class MainViewModel @Inject constructor(
     fun startListening() = viewModelScope.launch { startListeningUseCase() }
 
     fun stopListening() = viewModelScope.launch { stopListeningUseCase() }
+
+    override fun onCleared() {
+        releaseFaceResourcesUseCase()
+        super.onCleared()
+    }
 }
 
 

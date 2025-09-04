@@ -18,3 +18,8 @@ class ObserveFaceStateUseCase @Inject constructor(private val repository: FaceRe
         return repository.getFaceDetectionStateFlow()
     }
 }
+
+@Singleton
+class ReleaseFaceResourcesUseCase @Inject constructor(private val repository: FaceRepository) {
+    operator fun invoke() = repository.release()
+}
