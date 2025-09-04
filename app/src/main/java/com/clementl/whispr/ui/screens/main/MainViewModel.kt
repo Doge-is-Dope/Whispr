@@ -11,6 +11,7 @@ import com.clementl.whispr.domain.usecase.ObserveFaceStateUseCase
 import com.clementl.whispr.domain.usecase.ObserveRecordingStateUseCase
 import com.clementl.whispr.domain.usecase.StartListeningUseCase
 import com.clementl.whispr.domain.usecase.StopListeningUseCase
+import com.clementl.whispr.domain.usecase.ReleaseAudioResourcesUseCase
 import com.clementl.whispr.ui.screens.main.UiState.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -30,7 +31,8 @@ class MainViewModel @Inject constructor(
     private val getImageAnalyzerUseCase: GetImageAnalyzerUseCase,
     @param:AnalysisExecutor private val analysisExecutor: Executor,
     private val startListeningUseCase: StartListeningUseCase,
-    private val stopListeningUseCase: StopListeningUseCase
+    private val stopListeningUseCase: StopListeningUseCase,
+    private val releaseAudioResourcesUseCase: ReleaseAudioResourcesUseCase
 ) : ViewModel() {
 
     private val faceStateFlow = observeFaceStateUseCase()
@@ -76,6 +78,11 @@ class MainViewModel @Inject constructor(
     fun startListening() = startListeningUseCase()
 
     fun stopListening() = stopListeningUseCase()
+
+    override fun onCleared() {
+        releaseAudioResourcesUseCase()
+        super.onCleared()
+    }
 }
 
 

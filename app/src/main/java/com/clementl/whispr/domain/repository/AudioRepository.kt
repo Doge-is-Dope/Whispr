@@ -18,4 +18,9 @@ interface AudioRepository {
      * Provides a real-time stream of the current recording state.
      */
     fun getRecordingStateFlow(): Flow<RecordingState>
+
+    /**
+     * Releases underlying audio resources.
+     */
+    fun release()
 }

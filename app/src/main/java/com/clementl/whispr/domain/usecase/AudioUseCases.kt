@@ -20,3 +20,8 @@ class StopListeningUseCase @Inject constructor(private val repository: AudioRepo
 class ObserveRecordingStateUseCase @Inject constructor(private val repository: AudioRepository) {
     operator fun invoke(): Flow<RecordingState> = repository.getRecordingStateFlow()
 }
+
+@Singleton
+class ReleaseAudioResourcesUseCase @Inject constructor(private val repository: AudioRepository) {
+    operator fun invoke() = repository.release()
+}
