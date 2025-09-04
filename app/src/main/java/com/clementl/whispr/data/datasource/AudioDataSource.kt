@@ -22,7 +22,6 @@ interface AudioDataSource {
     suspend fun startListening()
     suspend fun stopListening()
     fun release()
-
     fun getRecordingStateFlow(): Flow<RecordingState>
 }
 
@@ -78,14 +77,31 @@ class AudioRecorderDataSource @Inject constructor() : AudioDataSource {
         recordingJob?.cancel()
         recordingJob = null
 
-        audioRecord?.stop()
+        try {
+            audioRecord?.let {
+                if (it.recordingState == AudioRecord.RECORDSTATE_RECORDING) it.stop()
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "AudioRecord stop failed.")
+        }
         _recordingState.value = RecordingState.Idle
         Timber.tag("test").d("Recording stopped.")
     }
 
     override fun release() {
-        audioRecord?.release()
-        audioRecord = null
+        // Ensure we stop reading and stop the recorder before releasing resources
+        recordingJob?.cancel()
+        recordingJob = null
+        try {
+            audioRecord?.let {
+                if (it.recordingState == AudioRecord.RECORDSTATE_RECORDING) it.stop()
+                it.release()
+            }
+        } catch (e: IllegalStateException) {
+            Timber.w(e, "AudioRecord stop/release failed during release")
+        } finally {
+            audioRecord = null
+        }
     }
 
     override fun getRecordingStateFlow(): Flow<RecordingState> = _recordingState.asStateFlow()
