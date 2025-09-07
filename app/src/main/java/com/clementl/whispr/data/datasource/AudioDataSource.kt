@@ -124,16 +124,22 @@ class AudioRecorderDataSource @Inject constructor() : AudioDataSource {
         recordingJob?.cancel()
         recordingJob = null
 
-
         try {
             if (audioRecord?.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
                 audioRecord?.stop()
             }
         } catch (e: IllegalStateException) {
             Timber.tag(TAG).e(e, "AudioRecord failed to stop")
+            try {
+                audioRecord?.let {
+                    if (it.recordingState == AudioRecord.RECORDSTATE_RECORDING) it.stop()
+                }
+            } catch (e: Exception) {
+                Timber.e(e, "AudioRecord stop failed.")
+            }
+            _recordingState.value = RecordingState.Idle
+            Timber.tag(TAG).d("Recording stopped.")
         }
-        _recordingState.value = RecordingState.Idle
-        Timber.tag(TAG).d("Recording stopped.")
     }
 
     override fun release() {

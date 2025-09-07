@@ -9,10 +9,10 @@ import com.clementl.whispr.domain.model.RecordingState
 import com.clementl.whispr.domain.usecase.GetImageAnalyzerUseCase
 import com.clementl.whispr.domain.usecase.ObserveFaceStateUseCase
 import com.clementl.whispr.domain.usecase.ObserveRecordingStateUseCase
+import com.clementl.whispr.domain.usecase.ReleaseAudioResourcesUseCase
+import com.clementl.whispr.domain.usecase.ReleaseFaceResourcesUseCase
 import com.clementl.whispr.domain.usecase.StartListeningUseCase
 import com.clementl.whispr.domain.usecase.StopListeningUseCase
-import com.clementl.whispr.domain.usecase.ReleaseAudioResourcesUseCase
-import com.clementl.whispr.ui.screens.main.UiState.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
@@ -28,11 +28,12 @@ import java.util.concurrent.Executor
 class MainViewModel @Inject constructor(
     observeFaceStateUseCase: ObserveFaceStateUseCase,
     observeRecordingStateUseCase: ObserveRecordingStateUseCase,
-    private val getImageAnalyzerUseCase: GetImageAnalyzerUseCase,
     @param:AnalysisExecutor private val analysisExecutor: Executor,
+    private val getImageAnalyzerUseCase: GetImageAnalyzerUseCase,
+    private val releaseFaceResourcesUseCase: ReleaseFaceResourcesUseCase,
     private val startListeningUseCase: StartListeningUseCase,
     private val stopListeningUseCase: StopListeningUseCase,
-    private val releaseAudioResourcesUseCase: ReleaseAudioResourcesUseCase
+    private val releaseAudioResourcesUseCase: ReleaseAudioResourcesUseCase,
 ) : ViewModel() {
 
     private val faceStateFlow = observeFaceStateUseCase()
@@ -40,15 +41,15 @@ class MainViewModel @Inject constructor(
     val uiState: StateFlow<UiState> =
         combine(faceStateFlow, recordingStateFlow) { faceState, recordingState ->
             when (faceState) {
-                is FaceDetectionState.NoFace -> Standby
-                is FaceDetectionState.Error -> Error("Face detection error: ${faceState.throwable.message}")
+                is FaceDetectionState.NoFace -> UiState.Standby
+                is FaceDetectionState.Error -> UiState.Error("Face detection error: ${faceState.throwable.message}")
                 is FaceDetectionState.FacesDetected -> {
                     when (recordingState) {
-                        is RecordingState.Idle -> FacesDetected(faceState.count)
-                        is RecordingState.Recording -> Listening(isSpeaking = false)
-                        is RecordingState.Speech -> Listening(isSpeaking = true)
-                        is RecordingState.Silence -> Listening(isSpeaking = false)
-                        is RecordingState.Error -> Error("Recording error: ${recordingState.throwable.message}")
+                        is RecordingState.Idle -> UiState.FacesDetected(faceState.count)
+                        is RecordingState.Recording -> UiState.Listening(isSpeaking = false)
+                        is RecordingState.Speech -> UiState.Listening(isSpeaking = true)
+                        is RecordingState.Silence -> UiState.Listening(isSpeaking = false)
+                        is RecordingState.Error -> UiState.Error("Recording error: ${recordingState.throwable.message}")
                     }
                 }
             }
@@ -80,6 +81,7 @@ class MainViewModel @Inject constructor(
     fun stopListening() = stopListeningUseCase()
 
     override fun onCleared() {
+        releaseFaceResourcesUseCase()
         releaseAudioResourcesUseCase()
         super.onCleared()
     }

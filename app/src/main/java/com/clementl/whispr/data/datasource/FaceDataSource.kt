@@ -26,6 +26,11 @@ interface FaceDataSource {
      * Provide an ImageAnalysis.Analyzer instance for cameraX to use.
      */
     fun getImageAnalyzer(): ImageAnalysis.Analyzer
+
+    /**
+     * Releases underlying ML Kit resources.
+     */
+    fun release()
 }
 
 @Singleton
@@ -43,6 +48,14 @@ class MLKitFaceDataSource @Inject constructor(
         _faceDetectionState.asStateFlow()
 
     override fun getImageAnalyzer(): ImageAnalysis.Analyzer = mlKitAnalyzer
+
+    override fun release() {
+        try {
+            detector.close()
+        } catch (_: Exception) {
+            // Ignore; best-effort cleanup
+        }
+    }
 
     private inner class ManualFaceAnalyzer(private val onResults: (List<Face>) -> Unit) :
         ImageAnalysis.Analyzer {
