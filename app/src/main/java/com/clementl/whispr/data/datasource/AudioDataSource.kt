@@ -35,7 +35,6 @@ interface AudioDataSource {
 class AudioRecorderDataSource @Inject constructor() : AudioDataSource {
 
     private val _recordingState = MutableStateFlow<RecordingState>(RecordingState.Idle)
-
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var recordingJob: Job? = null
     private var audioRecord: AudioRecord? = null
@@ -50,10 +49,16 @@ class AudioRecorderDataSource @Inject constructor() : AudioDataSource {
 
         try {
             if (audioRecord == null) {
-                val bufferSize =
+                val minBuffer =
                     AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT)
+                if (minBuffer <= 0) {
+                    throw IllegalStateException("getMinBufferSize failed: $minBuffer")
+                }
+                val frameBytes = FrameSize.FRAME_SIZE_320.value * BYTES_PER_SAMPLE
+                //  at least 4 frames worth of buffer
+                val bufferSize = maxOf(minBuffer, frameBytes * 4)
                 audioRecord = AudioRecord(
-                    MediaRecorder.AudioSource.MIC,
+                    MediaRecorder.AudioSource.VOICE_RECOGNITION,
                     SAMPLE_RATE,
                     CHANNEL_CONFIG,
                     AUDIO_FORMAT,
@@ -95,16 +100,23 @@ class AudioRecorderDataSource @Inject constructor() : AudioDataSource {
         val currentVad = vad ?: return
 
         val frameBuffer = ShortArray(FrameSize.FRAME_SIZE_320.value)
+        var lastEmitted: RecordingState? = null
 
         while (scope.isActive) {
             try {
                 val readSize = currentAudioRecord.read(frameBuffer, 0, frameBuffer.size)
 
-                if (readSize > 0) {
+                if (readSize == frameBuffer.size) {
                     val isSpeech = currentVad.isSpeech(frameBuffer)
-                    _recordingState.value =
-                        if (isSpeech) RecordingState.Speech else RecordingState.Silence
+                    val next = if (isSpeech) RecordingState.Speech else RecordingState.Silence
+                    if (next != lastEmitted) {
+                        _recordingState.value = next
+                        lastEmitted = next
+                    }
                     // TODO: Process frameBuffer for transcription when in Speech
+                } else if (readSize > 0) {
+                    // Partial read; wait for a full frame
+                    continue
                 } else {
                     Timber.tag(TAG).w("AudioRecord read failed: $readSize")
                 }
@@ -119,24 +131,18 @@ class AudioRecorderDataSource @Inject constructor() : AudioDataSource {
 
     override fun stopListening() {
         if (recordingJob?.isActive != true) {
+            _recordingState.value = RecordingState.Idle
             return
         }
         recordingJob?.cancel()
         recordingJob = null
-
         try {
             if (audioRecord?.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
                 audioRecord?.stop()
             }
         } catch (e: IllegalStateException) {
             Timber.tag(TAG).e(e, "AudioRecord failed to stop")
-            try {
-                audioRecord?.let {
-                    if (it.recordingState == AudioRecord.RECORDSTATE_RECORDING) it.stop()
-                }
-            } catch (e: Exception) {
-                Timber.e(e, "AudioRecord stop failed.")
-            }
+        } finally {
             _recordingState.value = RecordingState.Idle
             Timber.tag(TAG).d("Recording stopped.")
         }
@@ -155,6 +161,7 @@ class AudioRecorderDataSource @Inject constructor() : AudioDataSource {
 
     companion object {
         private const val TAG = "Test"
+        private const val BYTES_PER_SAMPLE = 2
         private const val SAMPLE_RATE = 16_000
         private const val CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_MONO
         private const val AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT
