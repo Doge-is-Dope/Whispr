@@ -55,19 +55,20 @@ app/src/main/java/com/clementl/whispr/
   Detects the start and end of speech using a VAD engine to avoid silent segments.
 
 - [ ] **Speech-to-Text (STT)**  
-  Transcribes user speech into text using a self-hosted Whisper implementation. Supports both Chinese and English.
+  Real-time streaming transcription of user speech with Whisper-Streaming or OpenAI Realtime API. Provides partial and final transcripts.
 
 - [ ] **AI Dialogue Engine**  
-  Uses OpenAI API to handle context-aware conversations (greetings, Q&A, small talk).
+  Uses OpenAI API to handle context-aware conversations.
+  Includes memory layers (short-term summaries, retrieval, preference KV) for personalization and continuity.
 
 - [ ] **Text-to-Speech (TTS)**  
-  Converts AI-generated text responses into natural-sounding audio using the system TTS engine.
+  Streaming text-to-speech playback (Realtime) with immediate audio output. Falls back to system TTS when streaming is unavailable.
 
 - [x] **Free Mic Mode**  
   Enables a manual toggle for continuous listening. VAD stays active to detect utterances. Supports interrupting TTS playback.
 
 - [ ] **Interrupt Mechanism**  
-  Allows users to interrupt AI speech mid-sentence. TTS stops immediately and switches back to listening mode while preserving context.
+  Supports barge-in: user speech interrupts AI playback instantly. Unfinished responses are canceled/truncated, context is preserved, and the app returns to listening mode.
 
 ## ✨ Interaction Flow
 
@@ -77,7 +78,7 @@ The primary states are:
 2.  Recording: A brief, transitional state when the microphone is activated.
 3.  Silence: The microphone is on and actively listening, but no speech is detected.
 4.  Speech: The microphone is on, and the VAD has detected speech.
-5.  Transcribing: The recorded speech is being converted to text (STT).
+5.  Transcribing (Streaming): The microphone is on and partial transcripts are produced in real time, with final text committed before sending to AI.
 6.  Thinking: The transcribed text is sent to the AI to generate a response.
 7.  Responding: The AI's response is converted to audio and played back (TTS).
 
