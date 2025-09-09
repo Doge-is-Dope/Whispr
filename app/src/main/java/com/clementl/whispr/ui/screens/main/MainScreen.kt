@@ -41,8 +41,7 @@ fun MainScreen(
     ) {
         RequestPermissions(permissions = mainPermissions) {
             CameraView(
-                analyzer = viewModel.getImageAnalyzer(),
-                executor = viewModel.getAnalysisExecutor(),
+                analysis = viewModel.getImageAnalysis(),
                 uiState = uiState,
             )
         }
