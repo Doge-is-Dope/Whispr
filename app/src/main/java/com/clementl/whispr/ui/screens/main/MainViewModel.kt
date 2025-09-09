@@ -65,9 +65,12 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getImageAnalyzer(): ImageAnalysis.Analyzer = getImageAnalyzerUseCase()
-
-    fun getAnalysisExecutor(): Executor = analysisExecutor
+    fun getImageAnalysis(): ImageAnalysis {
+        return ImageAnalysis.Builder()
+            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+            .build()
+            .also { it.setAnalyzer(analysisExecutor, getImageAnalyzerUseCase()) }
+    }
 
     fun startListening() = viewModelScope.launch { startListeningUseCase() }
 

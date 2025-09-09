@@ -39,11 +39,10 @@ import androidx.compose.ui.unit.dp
 import com.clementl.whispr.R
 import com.clementl.whispr.ui.screens.main.UiState
 import com.clementl.whispr.ui.theme.WhisprTheme
-import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
 @Composable
-fun CameraView(analyzer: ImageAnalysis.Analyzer, uiState: UiState, executor: Executor) {
+fun CameraView(analysis: ImageAnalysis, uiState: UiState) {
     val topScrim = remember {
         Brush.verticalGradient(
             0f to Color.Black.copy(alpha = 0.60f),
@@ -66,8 +65,7 @@ fun CameraView(analyzer: ImageAnalysis.Analyzer, uiState: UiState, executor: Exe
     Box(modifier = Modifier.fillMaxSize()) {
         // Camera feed
         CameraPreview(
-            analyzer = analyzer,
-            executor = executor,
+            imageAnalysis = analysis,
             modifier = Modifier.fillMaxSize()
         )
 
@@ -174,9 +172,11 @@ private fun statusText(uiState: UiState): String = when (uiState) {
 private fun Preview_Standby() {
     WhisprTheme {
         CameraView(
-            analyzer = { },
-            uiState = UiState.Standby,
-            executor = Executors.newSingleThreadExecutor()
+            analysis = ImageAnalysis.Builder()
+                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                .build()
+                .also { it.setAnalyzer(Executors.newSingleThreadExecutor(), {}) },
+            uiState = UiState.Standby
         )
     }
 }

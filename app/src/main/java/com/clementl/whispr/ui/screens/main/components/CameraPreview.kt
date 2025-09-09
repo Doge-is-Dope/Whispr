@@ -20,8 +20,7 @@ import java.util.concurrent.Executor
 @Composable
 fun CameraPreview(
     modifier: Modifier = Modifier,
-    analyzer: ImageAnalysis.Analyzer,
-    executor: Executor,
+    imageAnalysis: ImageAnalysis,
     cameraSelector: CameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA,
 ) {
     val context = LocalContext.current
@@ -36,13 +35,6 @@ fun CameraPreview(
             val preview = Preview.Builder().build().also {
                 it.surfaceProvider = previewView.surfaceProvider
             }
-
-            val imageAnalysis = ImageAnalysis.Builder()
-                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                .build()
-                .also {
-                    it.setAnalyzer(executor, analyzer)
-                }
 
             try {
                 cameraProvider.unbindAll()
