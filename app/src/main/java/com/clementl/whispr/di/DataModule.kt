@@ -1,9 +1,9 @@
 package com.clementl.whispr.di
 
-import com.clementl.whispr.data.datasource.AudioDataSource
-import com.clementl.whispr.data.datasource.AudioRecorderDataSource
-import com.clementl.whispr.data.datasource.FaceDataSource
-import com.clementl.whispr.data.datasource.MLKitFaceDataSource
+import com.clementl.whispr.data.datasource.device.AudioDataSource
+import com.clementl.whispr.data.datasource.device.AudioRecorderDataSource
+import com.clementl.whispr.data.datasource.device.FaceDataSource
+import com.clementl.whispr.data.datasource.device.MLKitFaceDataSource
 import com.clementl.whispr.data.repository.AudioRepositoryImpl
 import com.clementl.whispr.data.repository.FaceRepositoryImpl
 import com.clementl.whispr.data.repository.TranscriptionRepositoryImpl

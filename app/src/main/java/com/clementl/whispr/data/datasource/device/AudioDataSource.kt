@@ -1,4 +1,4 @@
-package com.clementl.whispr.data.datasource
+package com.clementl.whispr.data.datasource.device
 
 import android.Manifest
 import android.media.AudioFormat

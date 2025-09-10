@@ -1,4 +1,4 @@
-package com.clementl.whispr.data.datasource
+package com.clementl.whispr.data.datasource.device
 
 import androidx.annotation.OptIn
 import androidx.camera.core.ExperimentalGetImage

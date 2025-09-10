@@ -1,6 +1,6 @@
 package com.clementl.whispr.data.repository
 
-import com.clementl.whispr.data.datasource.AudioDataSource
+import com.clementl.whispr.data.datasource.device.AudioDataSource
 import com.clementl.whispr.domain.model.RecordingState
 import com.clementl.whispr.domain.repository.AudioRepository
 import jakarta.inject.Inject
