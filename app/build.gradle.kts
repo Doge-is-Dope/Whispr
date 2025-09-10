@@ -78,6 +78,7 @@ dependencies {
     implementation(libs.mlkit.face.detection)
     implementation(libs.bundles.retrofit)
     implementation(libs.timber)
+    implementation(libs.vad.webrtc)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
