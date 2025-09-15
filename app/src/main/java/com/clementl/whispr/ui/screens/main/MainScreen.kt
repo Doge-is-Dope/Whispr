@@ -13,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.clementl.whispr.ui.screens.main.components.CameraView
 import com.clementl.whispr.ui.screens.main.components.RecordingButton
 import com.clementl.whispr.ui.screens.main.components.RequestPermissions
 import com.clementl.whispr.utils.mainPermissions
@@ -38,10 +37,7 @@ fun MainScreen(
             .padding(contentPadding)
     ) {
         RequestPermissions(permissions = mainPermissions) {
-            CameraView(
-                analysis = viewModel.getImageAnalysis(),
-                uiState = uiState,
-            )
+            LaunchedEffect(Unit) { viewModel.startListening() }
         }
 
         if (uiState !is UiState.Standby && uiState !is UiState.Error) {
