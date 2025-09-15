@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Whispr</string>
-    <string name="permission_request_title">需要相機與麥克風權限</string>
-    <string name="permission_request_desc">請允許存取相機與麥克風以繼續使用此功能。</string>
+    <string name="permission_request_title">需要麥克風權限</string>
+    <string name="permission_request_desc">請允許存取麥克風以繼續使用此功能。</string>
     <string name="permission_request_action">授予存取權限</string>
     <string name="permission_settings_title">權限已停用</string>
-    <string name="permission_settings_desc">請前往設定啟用相機與麥克風權限以繼續使用。</string>
+    <string name="permission_settings_desc">請前往設定啟用麥克風權限以繼續使用。</string>
     <string name="permission_settings_action">開啟設定</string>
     <string name="status_standby">待命中…</string>
     <plurals name="status_faces_detected">

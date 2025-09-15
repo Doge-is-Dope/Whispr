@@ -4,10 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -61,7 +59,7 @@ fun RequestPermissions(
     } else {
         val isPermanentlyDenied = !permissionsState.shouldShowRationale && hasRequestedPermissions
 
-        PermissionRequestScreen(
+        PermissionRequestView(
             onRequestPermission = { permissionsState.launchMultiplePermissionRequest() },
             isPermanentlyDenied = isPermanentlyDenied,
             onOpenSettings = { openAppSettings(context) }
@@ -80,21 +78,20 @@ private fun openAppSettings(context: Context) {
 }
 
 @Composable
-fun PermissionRequestScreen(
+fun PermissionRequestView(
     onRequestPermission: () -> Unit,
     isPermanentlyDenied: Boolean = false,
     onOpenSettings: (() -> Unit)? = null,
 ) {
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp, vertical = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
-            painter = painterResource(R.drawable.ic_settings_camera),
-            contentDescription = "Camera and microphone permissions required",
+            painter = painterResource(R.drawable.ic_record),
+            contentDescription = "Microphone permission required",
             modifier = Modifier.size(72.dp),
             tint = MaterialTheme.colorScheme.primary
         )
@@ -144,6 +141,12 @@ fun PermissionRequestScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun PermissionRequestScreenPreview() {
-    PermissionRequestScreen(onRequestPermission = {})
+fun PermissionRequestPreview() {
+    PermissionRequestView(onRequestPermission = {})
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PermissionRequest_PermanentlyDenied_Preview() {
+    PermissionRequestView(onRequestPermission = {}, isPermanentlyDenied = true)
 }
